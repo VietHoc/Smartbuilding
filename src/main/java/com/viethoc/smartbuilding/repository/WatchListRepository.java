@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface WatchListRepository extends JpaRepository<Watchlist, Long> {
     List<Watchlist> findAllByAutomateId(Long automateId);
+    List<Watchlist> findAllByIsActive(Boolean isActive);
 }
