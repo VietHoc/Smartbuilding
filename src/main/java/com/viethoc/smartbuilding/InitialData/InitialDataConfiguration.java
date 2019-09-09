@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 public class InitialDataConfiguration {
 
     static Boolean running = true;
-    static int REQUEST_PER_MINUTE = 1;
+    static int REQUEST_PER_MINUTE = 10;
 
     List<Automate> automates;
     List<Watchlist> watchLists;
