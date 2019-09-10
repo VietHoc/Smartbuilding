@@ -1,4 +1,4 @@
-package com.viethoc.smartbuilding.InitialData;
+package com.viethoc.smartbuilding.controller;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.viethoc.smartbuilding.model.Automate;
@@ -57,7 +57,7 @@ public class InitialDataConfiguration {
         });
 
 
-        while (running) {
+//        while (running) {
             pollChangeUrls.forEach(pollChangeUrl -> {
                 try {
                     pollChange(pollChangeUrl);
@@ -71,7 +71,7 @@ public class InitialDataConfiguration {
             }catch (Exception ex){
                 ex.printStackTrace();
             }
-        }
+//        }
     }
 
     private void getDataDB(){
@@ -160,7 +160,7 @@ public class InitialDataConfiguration {
                     }
                 });
                 sensorData.setModification_date(new java.util.Date());
-                obixService.saveSensorData(sensorData);
+//                obixService.saveSensorData(sensorData);
             }
         }
     }
