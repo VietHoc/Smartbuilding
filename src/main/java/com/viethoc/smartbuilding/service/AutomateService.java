@@ -17,5 +17,18 @@ public class AutomateService {
     public List<Automate> getAllAutomates() {
         return automateRepository.findAll();
     }
+
+    public Automate addAutomate(Automate automate) {
+        return automateRepository.save(automate);
+    }
+
+    public Automate updateAutomate(Long id, Automate automate) {
+        automate.setId(id);
+        return automateRepository.save(automate);
+    }
+
+    public void deleteAutomate(Long id) {
+        automateRepository.deleteById(id);
+    }
 }
 

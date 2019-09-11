@@ -3,15 +3,15 @@ package com.viethoc.smartbuilding.model;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.sql.Time;
 
 @Entity
 @Data
 public class Watchlist {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "automate_id")
