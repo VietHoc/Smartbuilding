@@ -28,8 +28,9 @@ public class SensorController {
         return sensorService.updateSenSor(id, sensor);
     }
 
-    @DeleteMapping("/{id")
-    public void deleteSensor(@PathVariable Long id) {
-        sensorService.deleteSenSor(id);
+    @DeleteMapping("/{id}")
+    public Sensor deleteSensor(@PathVariable Long id) {
+        Long statusSensorDeleted = 2L;
+        return sensorService.updateStatus(id, statusSensorDeleted);
     }
 }

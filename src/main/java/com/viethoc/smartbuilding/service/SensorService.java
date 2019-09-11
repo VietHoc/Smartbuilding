@@ -5,7 +5,10 @@ import com.viethoc.smartbuilding.repository.SensorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SensorService {
@@ -14,7 +17,9 @@ public class SensorService {
     private SensorRepository sensorRepository;
 
     public List<Sensor> getAllSensors() {
-        return sensorRepository.findAll();
+        // sensor active have status 0 or 1
+        List<Long> activeCode = new ArrayList<>(Arrays.asList(0L, 1L));
+        return sensorRepository.findAllByStatusIn(activeCode);
     }
 
     public Sensor addSenSor(Sensor sensor) {
@@ -28,5 +33,15 @@ public class SensorService {
 
     public void deleteSenSor(Long id) {
         sensorRepository.deleteById(id);
+    }
+
+    public Sensor updateStatus(long id, Long status) {
+        Optional<Sensor> sensor = sensorRepository.findById(id);
+        if (sensor.isPresent()) {
+            sensor.get().setStatus(status);
+            return sensorRepository.save(sensor.get());
+        }
+
+        throw new RuntimeException("Invalid sensor id " + id);
     }
 }

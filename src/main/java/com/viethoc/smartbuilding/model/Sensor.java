@@ -22,8 +22,8 @@ public class Sensor {
     @Column(name = "uri")
     private String uri;
 
-    @Column(name = "sensor_name")
-    private String sensorName;
+    @Column(name = "name")
+    private String name;
 
     @Column(name = "location_name")
     private String locationName;
@@ -32,7 +32,7 @@ public class Sensor {
     private String locationIdentifier;
 
     @Column(name = "status")
-    private Boolean status;
+    private Long status;
 
     @Column(name = "creation_date")
     private Time creationDate;
