@@ -1,6 +1,5 @@
 package com.viethoc.smartbuilding.model;
 
-import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -8,7 +7,7 @@ import java.sql.Time;
 
 @Entity
 @Data
-public class Watchlist {
+public class Sensor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -23,8 +22,8 @@ public class Watchlist {
     @Column(name = "uri")
     private String uri;
 
-    @Column(name = "sensor_name")
-    private String sensorName;
+    @Column(name = "name")
+    private String name;
 
     @Column(name = "location_name")
     private String locationName;
@@ -32,8 +31,8 @@ public class Watchlist {
     @Column(name = "location_identifier")
     private String locationIdentifier;
 
-    @Column(name = "is_active")
-    private Boolean isActive;
+    @Column(name = "status")
+    private Long status;
 
     @Column(name = "creation_date")
     private Time creationDate;
