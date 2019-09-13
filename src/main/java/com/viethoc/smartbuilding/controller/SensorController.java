@@ -15,8 +15,8 @@ public class SensorController {
     private SensorService sensorService;
 
     @GetMapping
-    public SensorResponse getListAutomates(@RequestParam String sort, @RequestParam String order, @RequestParam int page, @RequestParam int pageSize) {
-        return sensorService.getAllSensors(sort, order, page, pageSize);
+    public SensorResponse getListAutomates(@RequestParam String sort, @RequestParam String order, @RequestParam int page, @RequestParam int pageSize, @RequestParam String search) {
+        return sensorService.getAllSensors(sort, order, page, pageSize, search);
     }
 
     @PostMapping

@@ -1,4 +1,4 @@
-package com.viethoc.smartbuilding.repository;
+package com.viethoc.smartbuilding.repository.automate;
 
 import com.viethoc.smartbuilding.model.Automate;
 import org.springframework.data.jpa.repository.JpaRepository;

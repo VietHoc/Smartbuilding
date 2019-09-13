@@ -1,13 +1,9 @@
 package com.viethoc.smartbuilding.service;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
-import com.viethoc.smartbuilding.model.Automate;
 import com.viethoc.smartbuilding.model.Sensor;
 import com.viethoc.smartbuilding.model.SensorData;
-import com.viethoc.smartbuilding.model.Watchlist;
-import com.viethoc.smartbuilding.repository.AutomateRepository;
-import com.viethoc.smartbuilding.repository.SensorDataRepository;
-import com.viethoc.smartbuilding.repository.WatchListRepository;
+import com.viethoc.smartbuilding.repository.sensor_data.SensorDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;

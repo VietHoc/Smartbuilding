@@ -1,12 +1,15 @@
 package com.viethoc.smartbuilding.service;
 
+import com.viethoc.smartbuilding.model.SearchCriteria;
 import com.viethoc.smartbuilding.model.Sensor;
 import com.viethoc.smartbuilding.payload.SensorResponse;
-import com.viethoc.smartbuilding.repository.SensorRepository;
+import com.viethoc.smartbuilding.repository.sensor.SensorRepository;
+import com.viethoc.smartbuilding.repository.sensor.SensorSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,18 +23,26 @@ public class SensorService {
     @Autowired
     private SensorRepository sensorRepository;
 
-    public SensorResponse getAllSensors(String sort, String order, int page, int pageSize) {
+    public SensorResponse getAllSensors(String sort, String order, int page, int pageSize, String search) {
         SensorResponse sensorResponse = new SensorResponse();
-        // sensor enable have status 0 or 1
-        List<Long> activeCode = new ArrayList<>(Arrays.asList(0L, 1L));
+
+        // sensor search
+        SensorSpecification spec1 = new SensorSpecification().setCriteria(new SearchCriteria().setKey("name").setOperation(":").setValue(search));
+        SensorSpecification spec2 = new SensorSpecification().setCriteria(new SearchCriteria().setKey("uri").setOperation(":").setValue(search));
+
+        // sensor active
+        SensorSpecification spec3 = new SensorSpecification().setCriteria(new SearchCriteria().setKey("status").setOperation(":").setValue("0"));
+        SensorSpecification spec4 = new SensorSpecification().setCriteria(new SearchCriteria().setKey("status").setOperation(":").setValue("1"));
+
+        Page pageSensor = Page.empty();
 
         if (order.equals("asc")) {
-            sensorResponse.setItems(sensorRepository.findAllByStatusIn(activeCode, PageRequest.of(page, pageSize, Sort.by(sort).ascending())));
+            pageSensor = sensorRepository.findAll(Specification.where(spec1).or(spec2).and(Specification.where(spec3).or(spec4)), PageRequest.of(page, pageSize, Sort.by(sort).ascending()));
         } else {
-            sensorResponse.setItems(sensorRepository.findAllByStatusIn(activeCode, PageRequest.of(page, pageSize, Sort.by(sort).descending())));
+            pageSensor = sensorRepository.findAll(Specification.where(spec1).or(spec2).and(Specification.where(spec3).or(spec4)), PageRequest.of(page, pageSize, Sort.by(sort).descending()));
         }
 
-        sensorResponse.setTotalCount(sensorRepository.findAllByStatusIn(activeCode).size());
+        sensorResponse.setItems(pageSensor.getContent()).setTotalCount((int) pageSensor.getTotalElements());
         return sensorResponse;
     }
 
