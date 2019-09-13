@@ -2,6 +2,7 @@ package com.viethoc.smartbuilding.service;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.viethoc.smartbuilding.model.Automate;
+import com.viethoc.smartbuilding.model.Sensor;
 import com.viethoc.smartbuilding.model.SensorData;
 import com.viethoc.smartbuilding.model.Watchlist;
 import com.viethoc.smartbuilding.repository.AutomateRepository;
@@ -25,25 +26,10 @@ import java.util.List;
 public class ObixService {
 
     @Autowired
-    private AutomateRepository automateRepository;
-
-    @Autowired
-    private WatchListRepository watchListRepository;
+    private SensorService sensorService;
 
     @Autowired
     private SensorDataRepository sensorDataRepository;
-
-    public List<Automate> getAllAutomatesActive(){
-        return automateRepository.findAllByActive(true);
-    }
-
-    public List<Watchlist> getAllWatchListActive(){
-        return watchListRepository.findAllByIsActive(true);
-    }
-
-    public List<Watchlist> findAllByAutomateId(Long automateId){
-        return watchListRepository.findAllByAutomateId(automateId);
-    }
 
     public void saveSensorData(SensorData sensorData){
         sensorDataRepository.save(sensorData);
@@ -92,8 +78,8 @@ public class ObixService {
         list.setAttribute("of", "obix:Uri");
 
         // uri element
-        List<Watchlist> watchlists = watchListRepository.findAllByAutomateId(automateId);
-        watchlists.forEach(res -> {
+        List<Sensor> sensors = sensorService.findAllByAutomateId(automateId);
+        sensors.forEach(res -> {
             Element uri = document.createElement("uri");
             list.appendChild(uri);
             uri.setAttribute("val", res.getUri());

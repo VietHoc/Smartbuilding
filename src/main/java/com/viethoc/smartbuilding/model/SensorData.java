@@ -18,7 +18,7 @@ public class SensorData {
     private Long id;
 
     @Column(name = "Watchlist_id")
-    private Long WatchlistId;
+    private Long SensorId;
 
     @Column(name = "Dec_value")
     private Float DecValue;
