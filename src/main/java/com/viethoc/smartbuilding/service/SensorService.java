@@ -1,8 +1,12 @@
 package com.viethoc.smartbuilding.service;
 
 import com.viethoc.smartbuilding.model.Sensor;
+import com.viethoc.smartbuilding.payload.SensorResponse;
 import com.viethoc.smartbuilding.repository.SensorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,10 +20,19 @@ public class SensorService {
     @Autowired
     private SensorRepository sensorRepository;
 
-    public List<Sensor> getAllSensors() {
-        // sensor active have status 0 or 1
+    public SensorResponse getAllSensors(String sort, String order, int page, int pageSize) {
+        SensorResponse sensorResponse = new SensorResponse();
+        // sensor enable have status 0 or 1
         List<Long> activeCode = new ArrayList<>(Arrays.asList(0L, 1L));
-        return sensorRepository.findAllByStatusIn(activeCode);
+
+        if (order.equals("asc")) {
+            sensorResponse.setItems(sensorRepository.findAllByStatusIn(activeCode, PageRequest.of(page, pageSize, Sort.by(sort).ascending())));
+        } else {
+            sensorResponse.setItems(sensorRepository.findAllByStatusIn(activeCode, PageRequest.of(page, pageSize, Sort.by(sort).descending())));
+        }
+
+        sensorResponse.setTotalCount(sensorRepository.findAllByStatusIn(activeCode).size());
+        return sensorResponse;
     }
 
     public Sensor addSenSor(Sensor sensor) {
@@ -43,5 +56,15 @@ public class SensorService {
         }
 
         throw new RuntimeException("Invalid sensor id " + id);
+    }
+
+    public List<Sensor> getAllSensorActive(){
+        // sensor active have status 1
+        List<Long> activeCode = new ArrayList<>(Arrays.asList(1L));
+        return sensorRepository.findAllByStatusIn(activeCode);
+    }
+
+    public List<Sensor> findAllByAutomateId(Long automateId) {
+        return sensorRepository.findAllByAutomateId(automateId);
     }
 }

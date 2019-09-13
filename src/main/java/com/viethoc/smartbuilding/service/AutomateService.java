@@ -30,5 +30,10 @@ public class AutomateService {
     public void deleteAutomate(Long id) {
         automateRepository.deleteById(id);
     }
+
+    public List<Automate> getAllAutomatesActive(){
+        return automateRepository.findAllByActive(true);
+    }
+
 }
 

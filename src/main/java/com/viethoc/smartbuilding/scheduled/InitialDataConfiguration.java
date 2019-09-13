@@ -1,12 +1,17 @@
-package com.viethoc.smartbuilding.controller;
+package com.viethoc.smartbuilding.scheduled;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.viethoc.smartbuilding.model.Automate;
+import com.viethoc.smartbuilding.model.Sensor;
 import com.viethoc.smartbuilding.model.SensorData;
-import com.viethoc.smartbuilding.model.Watchlist;
+import com.viethoc.smartbuilding.service.AutomateService;
 import com.viethoc.smartbuilding.service.ObixService;
+import com.viethoc.smartbuilding.service.SensorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -29,12 +34,21 @@ public class InitialDataConfiguration {
     static int REQUEST_PER_MINUTE = 10;
 
     List<Automate> automates;
-    List<Watchlist> watchLists;
-    Map<Long, List<Watchlist>> watchlistGroupHash;
+    List<Sensor> sensors;
+    Map<Long, List<Sensor>> sensorGroupsHash;
     List<String> pollChangeUrls = new ArrayList<>();
 
     @Autowired
+    private AutomateService automateService;
+
+    @Autowired
+    private SensorService sensorService;
+
+    @Autowired
     private ObixService obixService;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @PostConstruct
     public void postConstruct() throws Exception {
@@ -74,13 +88,17 @@ public class InitialDataConfiguration {
 //        }
     }
 
-    private void getDataDB(){
-        automates = obixService.getAllAutomatesActive();
-        watchLists = obixService.getAllWatchListActive();
-        watchlistGroupHash = watchLists.stream().collect(Collectors.groupingBy(Watchlist::getAutomateId));
+    private void getDataDB() throws JsonProcessingException {
+        automates = automateService.getAllAutomatesActive();
+        sensors = sensorService.getAllSensorActive();
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonInString = mapper.writeValueAsString(sensors);
+        redisTemplate.opsForValue().set("sensors", jsonInString);
+
+        sensorGroupsHash = sensors.stream().collect(Collectors.groupingBy(Sensor::getAutomateId));
 
         System.out.println("Automates" + automates);
-        System.out.println(watchlistGroupHash + "/n");
+        System.out.println(sensorGroupsHash + "/n");
     }
 
     private String makeWatch(String ipAddress) throws UnirestException, IOException, SAXException, ParserConfigurationException {
@@ -152,11 +170,11 @@ public class InitialDataConfiguration {
                     default:
                         sensorData.setStr_val(value);
                 }
-                List<Watchlist> watchListsServer = obixService.getAllWatchListActive();
+                List<Sensor> sensorsServer = sensorService.getAllSensorActive();
 
-                watchListsServer.forEach(watchlist -> {
-                    if (href.contains(watchlist.getUri())){
-                        sensorData.setWatchlistId(watchlist.getId());
+                sensorsServer.forEach(sensor -> {
+                    if (href.contains(sensor.getUri())){
+                        sensorData.setSensorId(sensor.getId());
                     }
                 });
                 sensorData.setModification_date(new java.util.Date());

@@ -1,6 +1,7 @@
 package com.viethoc.smartbuilding.controller;
 
 import com.viethoc.smartbuilding.model.Sensor;
+import com.viethoc.smartbuilding.payload.SensorResponse;
 import com.viethoc.smartbuilding.service.SensorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +15,8 @@ public class SensorController {
     private SensorService sensorService;
 
     @GetMapping
-    public List<Sensor> getListAutomates() {
-        return sensorService.getAllSensors();
+    public SensorResponse getListAutomates(@RequestParam String sort, @RequestParam String order, @RequestParam int page, @RequestParam int pageSize) {
+        return sensorService.getAllSensors(sort, order, page, pageSize);
     }
 
     @PostMapping
