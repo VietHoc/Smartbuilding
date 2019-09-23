@@ -1,6 +1,7 @@
 package com.viethoc.smartbuilding.controller;
 
 import com.viethoc.smartbuilding.model.Automate;
+import com.viethoc.smartbuilding.model.Sensor;
 import com.viethoc.smartbuilding.service.AutomateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -32,4 +33,7 @@ public class AutomateController {
     public void deleteAutomate(@PathVariable Long id){
         automateService.deleteAutomate(id);
     }
+
+    @GetMapping("/{id}")
+    public List<Sensor> getDetailAutomate(@PathVariable Long id ) { return automateService.getAllSensorByAutomate(id);}
 }
