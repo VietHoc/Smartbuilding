@@ -14,11 +14,17 @@ public class SensorDataController {
     private  AutomateService automateService;
 
     @GetMapping("/monitor")
-    public List<Sensor> getDetailAutomate(@RequestParam Long automateId, @RequestParam(value = "", required=false) String valueDate ) {
-        if (valueDate == null) {
-            return automateService.getAllSensorByAutomate(automateId);
-        } else {
-            return automateService.getAllSensorByAutomate(automateId).subList(0, 5);
-        }
+    public List<Sensor> getListSensorDataFixByAutomate(@RequestParam Long automateId) {
+        return automateService.getAllSensorByAutomate(automateId);
+    }
+
+    @GetMapping("/updated-monitor")
+    public List<Sensor> updateSensorDataFixByAutomate(@RequestParam Long automateId) {
+        return automateService.getAllSensorByAutomate(automateId).subList(0, 5);
+    }
+
+    @GetMapping("/interval")
+    public int getInterval() {
+        return 10;
     }
 }
